@@ -2,10 +2,9 @@
 %% This is readapted from https://www.mathworks.com/matlabcentral/answers/404470-matlab-morse-code-decoder-please-help-me
 %% I also implemented the spacing methods from http://www.nu-ware.com/NuCode%20Help/index.html?morse_code_structure_and_timing_.htm
 
-function cw = Morse(word,fs)
+function cw = Morse(word,wpm,fs)
 
 %% wpm = 2.4 * dots/second (dps)
-wpm = 60;
 dps = wpm/2.4;
 dot = dps;
 dash = 3*dps;
