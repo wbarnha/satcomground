@@ -31,39 +31,6 @@ ylabel('amplitude(volt)');
 xlabel(' time(sec)');
 title('transmitting information as digital signal');
 
-%XXXXXXXXXXXXX NRZI XXXXXXXXXXXXXXXXXXXXXXXXXX%
-
-function y = NRZI(ibs,rb)
-
-% ibs = [0,1,0,0,1,1,1,0];
-% rb = 1e6;
-
-t = 0:1/(rb*1000):length(ibs)/rb;
-y = []; %Dynamic memory allocation is very dangerous, do not make this a habit
-
-%% This assumes that we are using NRZM implemented into NRZI. If needed to readapt as
-%% NRZ-S, then change the flow control for ibs(i) from 0 to 1
-%% Perhaps this should be part of the function call?
-
-prev = 0;
-for i = 1:length(ibs)
-    if ibs(i) == 0
-        for j = 1:length(t)/(length(ibs))
-            y = [y,prev];
-        end
-    else
-        for j = 1:length(t)/(2*length(ibs))
-            y = [y,prev];
-        end
-        prev = bitxor(1,prev);
-        for j = 1:length(t)/(2*length(ibs))
-            y = [y,prev];
-        end
-    end
-end
-
-end
-
 %XXXXXXXXXXXXXXXXXXXXXXX Binary-FSK modulation XXXXXXXXXXXXXXXXXXXXXXXXXXX%
 A=5;                                          % Amplitude of carrier signal
 br=1/bp;                                                         % bit rate
@@ -86,15 +53,6 @@ plot(t3,m);
 xlabel('time(sec)');
 ylabel('amplitude(volt)');
 title('waveform for binary FSK modulation coresponding binary information');
-
-%XXXXXXXXXXXXXXXXXXXXXXX AWGN Simulation XXXXXXXXXXXXXXXXXXXXXXXXXXX%
-
-function awgnsig = addnoise(input)
-awgnsig = zeros(1,length(input));
-for i = 1:length(input)
-    awgnsig(i) = input(i) + randn;
-end
-end
 
 %XXXXXXXXXXXXXXXXXXXX Binary FSK demodulation XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 mn=[];
@@ -138,3 +96,45 @@ ylabel('amplitude(volt)');
 xlabel(' time(sec)');
 title('recived information as digital signal after binary FSK demodulation');
 %>>>>>>>>>>>>>>>>>>>>>>>>>> end of program >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%
+
+%XXXXXXXXXXXXXXXXXXXXXXX AWGN Simulation XXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+function awgnsig = addnoise(input)
+awgnsig = zeros(1,length(input));
+for i = 1:length(input)
+    awgnsig(i) = input(i) + randn;
+end
+end
+
+%XXXXXXXXXXXXX NRZI XXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+function y = NRZI(ibs,rb)
+
+% ibs = [0,1,0,0,1,1,1,0];
+% rb = 1e6;
+
+t = 0:1/(rb*1000):length(ibs)/rb;
+y = []; %Dynamic memory allocation is very dangerous, do not make this a habit
+
+%% This assumes that we are using NRZM implemented into NRZI. If needed to readapt as
+%% NRZ-S, then change the flow control for ibs(i) from 0 to 1
+%% Perhaps this should be part of the function call?
+
+prev = 0;
+for i = 1:length(ibs)
+    if ibs(i) == 0
+        for j = 1:length(t)/(length(ibs))
+            y = [y,prev];
+        end
+    else
+        for j = 1:length(t)/(2*length(ibs))
+            y = [y,prev];
+        end
+        prev = bitxor(1,prev);
+        for j = 1:length(t)/(2*length(ibs))
+            y = [y,prev];
+        end
+    end
+end
+
+end
