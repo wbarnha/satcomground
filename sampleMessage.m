@@ -43,6 +43,7 @@ y = []; %Dynamic memory allocation is very dangerous, do not make this a habit
 
 %% This assumes that we are using NRZM implemented into NRZI. If needed to readapt as
 %% NRZ-S, then change the flow control for ibs(i) from 0 to 1
+%% Perhaps this should be part of the function call?
 
 prev = 0;
 for i = 1:length(ibs)
@@ -86,6 +87,14 @@ xlabel('time(sec)');
 ylabel('amplitude(volt)');
 title('waveform for binary FSK modulation coresponding binary information');
 
+%XXXXXXXXXXXXXXXXXXXXXXX AWGN Simulation XXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+function awgnsig = addnoise(input)
+awgnsig = zeros(1,length(input));
+for i = 1:length(input)
+    awgnsig(i) = input(i) + randn;
+end
+end
 
 %XXXXXXXXXXXXXXXXXXXX Binary FSK demodulation XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 mn=[];
